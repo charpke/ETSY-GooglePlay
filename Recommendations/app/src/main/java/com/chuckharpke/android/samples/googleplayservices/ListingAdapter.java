@@ -33,15 +33,15 @@ implements Callback<ActiveListings> {
     }
 
     @Override
-    public void onBindViewHolder(ListingHolder holder, int i) {
+    public void onBindViewHolder(ListingHolder listingHolder, int i) {
         final Listing listing = activeListings.results[i];
-        holder.titleView.setText(listing.title);
-        holder.priceView.setText(listing.price);
-        holder.shopNameView.setText(listing.Shop.shop_name);
+        listingHolder.titleView.setText(listing.title);
+        listingHolder.priceView.setText(listing.price);
+        listingHolder.shopNameView.setText(listing.Shop.shop_name);
 
-        Picasso.with(holder.imageView.getContext())
+        Picasso.with(listingHolder.imageView.getContext())
                 .load(listing.Images[0].url_570xN)
-                .into(holder.imageView);
+                .into(listingHolder.imageView);
     }
 
     @Override
