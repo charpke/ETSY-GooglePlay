@@ -1,17 +1,31 @@
 package com.chuckharpke.android.samples.googleplayservices;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 
 public class MainActivity extends ActionBarActivity {
+
+
+    private RecyclerView recyclerView;
+    private View progressBar;
+    private TextView errorView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        progressBar = findViewById(R.id.progressbar);
+        errorView = (TextView) findViewById(R.id.error_view);
+
+        showLoading();
     }
 
 
@@ -35,5 +49,23 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    public void showLoading() {
+
+        progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
+    }
+    public void showList() {
+        progressBar.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+        errorView.setVisibility(View.GONE);
+
+    }
+    public void showError() {
+        progressBar.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
+        errorView.setVisibility(View.VISIBLE);
+
     }
 }
