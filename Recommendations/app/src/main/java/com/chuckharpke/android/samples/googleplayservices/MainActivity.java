@@ -3,18 +3,24 @@ package com.chuckharpke.android.samples.googleplayservices;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.chuckharpke.android.samples.googleplayservices.api.Etsy;
+import com.chuckharpke.android.samples.googleplayservices.model.ActiveListings;
+
 
 public class MainActivity extends ActionBarActivity {
-
+    private static final String STATE_ACTIVE_LISTINGS = "StateActiveListings";
 
     private RecyclerView recyclerView;
     private View progressBar;
     private TextView errorView;
+
+    private ListingAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,10 +30,38 @@ public class MainActivity extends ActionBarActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         progressBar = findViewById(R.id.progressbar);
         errorView = (TextView) findViewById(R.id.error_view);
+        // setup recyclerview
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
 
-        showLoading();
+         adapter = new ListingAdapter(this);
+
+
+        recyclerView.setAdapter(adapter);
+
+        if(savedInstanceState == null) {
+            showLoading();
+            Etsy.getActiveListings(adapter);
+        } else {
+            if (savedInstanceState.containsKey(STATE_ACTIVE_LISTINGS)) {
+                adapter.success((ActiveListings) savedInstanceState.getParcelable(STATE_ACTIVE_LISTINGS), null);
+                showList();
+            } else {
+                showLoading();
+                Etsy.getActiveListings(adapter);
+            }
+        }
+
+
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        ActiveListings activeListings = adapter.getActiveListings();
+        if (activeListings != null) {
+            outState.putParcelable(STATE_ACTIVE_LISTINGS, activeListings);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

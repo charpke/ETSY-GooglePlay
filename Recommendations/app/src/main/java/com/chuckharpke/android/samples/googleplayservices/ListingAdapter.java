@@ -1,6 +1,5 @@
 package com.chuckharpke.android.samples.googleplayservices;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +20,13 @@ import retrofit.client.Response;
  */public class ListingAdapter  extends RecyclerView.Adapter<ListingAdapter.ListingHolder>
 implements Callback<ActiveListings> {
 
+    private MainActivity activity;
     private LayoutInflater inflater;
     private ActiveListings activeListings;
 
-    public ListingAdapter(Context context) {
-        inflater = LayoutInflater.from(context);
+    public ListingAdapter(MainActivity activity) {
+        this.activity = activity;
+        inflater = LayoutInflater.from(activity);
     }
     @Override
     public ListingHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -62,12 +63,17 @@ implements Callback<ActiveListings> {
     public void success(ActiveListings activeListings, Response response) {
         this.activeListings = activeListings;
         notifyDataSetChanged();
+        this.activity.showList();
     }
 
     @Override
     public void failure(RetrofitError error) {
-
+        this.activity.showError();
     }
+    public ActiveListings getActiveListings() {
+        return activeListings;
+    }
+
 
 
     public class ListingHolder extends RecyclerView.ViewHolder {

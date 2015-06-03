@@ -1,5 +1,8 @@
 package com.chuckharpke.android.samples.googleplayservices.api;
 
+import com.chuckharpke.android.samples.googleplayservices.model.ActiveListings;
+
+import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 
@@ -25,5 +28,10 @@ public class Etsy {
                 .setRequestInterceptor(getInterceptor())
                 .build()
                 .create(Api.class);
+    }
+
+    public static void getActiveListings(Callback<ActiveListings> callback) {
+        getApi().activeListings("Images.Shop", callback);
+
     }
 }
