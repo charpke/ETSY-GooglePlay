@@ -1,5 +1,6 @@
 package com.chuckharpke.android.samples.googleplayservices;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.chuckharpke.android.samples.googleplayservices.api.Etsy;
+import com.chuckharpke.android.samples.googleplayservices.google.GoogleServicesHelper;
 import com.chuckharpke.android.samples.googleplayservices.model.ActiveListings;
 
 
@@ -20,6 +21,7 @@ public class MainActivity extends ActionBarActivity {
     private View progressBar;
     private TextView errorView;
 
+    private GoogleServicesHelper googleServicesHelper;
     private ListingAdapter adapter;
 
     @Override
@@ -33,25 +35,41 @@ public class MainActivity extends ActionBarActivity {
         // setup recyclerview
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
 
-         adapter = new ListingAdapter(this);
+        adapter = new ListingAdapter(this);
 
 
         recyclerView.setAdapter(adapter);
 
-        if(savedInstanceState == null) {
-            showLoading();
-            Etsy.getActiveListings(adapter);
-        } else {
+        googleServicesHelper = new GoogleServicesHelper(this, adapter);
+
+        showLoading();
+
+        if(savedInstanceState != null) {
             if (savedInstanceState.containsKey(STATE_ACTIVE_LISTINGS)) {
                 adapter.success((ActiveListings) savedInstanceState.getParcelable(STATE_ACTIVE_LISTINGS), null);
-                showList();
-            } else {
-                showLoading();
-                Etsy.getActiveListings(adapter);
+
             }
         }
 
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        googleServicesHelper.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        googleServicesHelper.disconnect();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        googleServicesHelper.handleActivityResult(requestCode, resultCode, data);
     }
 
     @Override
