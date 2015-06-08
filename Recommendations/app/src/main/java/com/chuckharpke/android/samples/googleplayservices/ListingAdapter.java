@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,6 +12,7 @@ import com.chuckharpke.android.samples.googleplayservices.api.Etsy;
 import com.chuckharpke.android.samples.googleplayservices.google.GoogleServicesHelper;
 import com.chuckharpke.android.samples.googleplayservices.model.ActiveListings;
 import com.chuckharpke.android.samples.googleplayservices.model.Listing;
+import com.google.android.gms.plus.PlusOneButton;
 import com.squareup.picasso.Picasso;
 
 import retrofit.Callback;
@@ -48,9 +50,11 @@ import retrofit.client.Response;
 
 
         if(isGooglePlayServicesAvailable) {
-
+            listingHolder.plusOneButton.setVisibility(View.VISIBLE);
+            listingHolder.plusOneButton.initialize(listing.url, i);
+            listingHolder.plusOneButton.setAnnotation(PlusOneButton.ANNOTATION_NONE);
         } else {
-
+            listingHolder.plusOneButton.setVisibility(View.GONE);
         }
 
         Picasso.with(listingHolder.imageView.getContext())
@@ -116,6 +120,8 @@ import retrofit.client.Response;
         public TextView titleView;
         public TextView shopNameView;
         public TextView priceView;
+        public PlusOneButton plusOneButton;
+        public ImageButton shareButton;
 
         public ListingHolder(View itemView) {
             super(itemView);
@@ -123,6 +129,8 @@ import retrofit.client.Response;
             titleView = (TextView) itemView.findViewById(R.id.listing_title);
             shopNameView = (TextView) itemView.findViewById(R.id.listing_shop_name);
             priceView = (TextView) itemView.findViewById(R.id.listing_price);
+            plusOneButton = (PlusOneButton) itemView.findViewById(R.id.listing_plus_one_btn);
+            shareButton = (ImageButton) itemView.findViewById(R.id.listing_share_btn);
         }
     }
 
